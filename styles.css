@@ -326,6 +326,7 @@ html.standalone .main-content {
     top: 0;
     width: 280px;
     height: 100vh;
+    max-height: 100vh;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -335,6 +336,7 @@ html.standalone .main-content {
     display: flex;
     flex-direction: column;
     border-right: 1px solid rgba(0, 0, 0, 0.05);
+    overflow: hidden;
 }
 
 .sidebar.open {
@@ -378,6 +380,7 @@ html.standalone .main-content {
     flex: 1;
     padding: 20px 0;
     overflow-y: auto;
+    min-height: 0;
 }
 
 .nav-link {
@@ -420,6 +423,8 @@ html.standalone .main-content {
 .logout-btn {
     margin: 20px;
     width: calc(100% - 40px);
+    flex-shrink: 0;
+    margin-top: auto;
 }
 
 /* Overlay */
@@ -834,6 +839,51 @@ html.standalone .main-content {
     gap: 10px;
     margin-bottom: 20px;
     flex-wrap: wrap;
+    align-items: center;
+}
+
+.view-type-toggle {
+    display: flex;
+    gap: 4px;
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 4px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+.view-btn {
+    background: transparent;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.view-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+}
+
+.view-btn:hover {
+    background: var(--bg-color);
+    color: var(--primary-color);
+}
+
+.view-btn.active {
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: var(--shadow);
+}
+
+.view-btn.active svg {
+    stroke: white;
 }
 
 .search-input,
@@ -857,6 +907,43 @@ html.standalone .main-content {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    transition: all 0.3s ease;
+}
+
+.data-list.grid-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.data-list.compact-view {
+    gap: 8px;
+}
+
+.data-list.compact-view .data-item {
+    padding: 16px;
+    border-radius: 12px;
+}
+
+.data-list.compact-view .data-item-header {
+    margin-bottom: 8px;
+}
+
+.data-list.compact-view .data-item-details {
+    margin-bottom: 8px;
+    gap: 10px;
+}
+
+.data-list.compact-view .data-item-actions {
+    margin-top: 8px;
+}
+
+.data-list.compact-view .data-item-title {
+    font-size: 16px;
+}
+
+.data-list.compact-view .data-item-amount {
+    font-size: 20px;
 }
 
 .data-item {

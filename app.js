@@ -11,6 +11,8 @@ let budgets = {
 };
 let expenseChart = null;
 let budgetChart = null;
+let expenseViewType = 'list'; // 'list', 'grid', 'compact'
+let receivedViewType = 'list'; // 'list', 'grid', 'compact'
 
 // Firebase Firestore Collections Reference
 const expensesCollection = db.collection('expenses');
@@ -85,6 +87,15 @@ function setupEventListeners() {
     document.getElementById('received-search').addEventListener('input', filterReceived);
     document.getElementById('received-filter').addEventListener('change', filterReceived);
 
+    // View Type Toggle
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const viewType = btn.getAttribute('data-view');
+            const dataType = btn.getAttribute('data-type');
+            switchViewType(dataType, viewType);
+        });
+    });
+
     // Modal Overlay
     document.querySelectorAll('.modal').forEach(modal => {
         modal.addEventListener('click', (e) => {
@@ -93,6 +104,37 @@ function setupEventListeners() {
             }
         });
     });
+}
+
+// Switch View Type
+function switchViewType(dataType, viewType) {
+    if (dataType === 'expense') {
+        expenseViewType = viewType;
+        const container = document.getElementById('expenses-list');
+        container.className = 'data-list ' + viewType + '-view';
+
+        // Update active button
+        document.querySelectorAll('.view-btn[data-type="expense"]').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`.view-btn[data-type="expense"][data-view="${viewType}"]`).classList.add('active');
+
+        // Re-render expenses to maintain view type
+        renderExpenses();
+    } else if (dataType === 'received') {
+        receivedViewType = viewType;
+        const container = document.getElementById('received-list');
+        container.className = 'data-list ' + viewType + '-view';
+
+        // Update active button
+        document.querySelectorAll('.view-btn[data-type="received"]').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`.view-btn[data-type="received"][data-view="${viewType}"]`).classList.add('active');
+
+        // Re-render received to maintain view type
+        renderReceived();
+    }
 }
 
 // Auth State Check
@@ -509,6 +551,11 @@ function generateUniqueId() {
 // Render Expenses
 function renderExpenses() {
     const container = document.getElementById('expenses-list');
+    if (!container) return;
+
+    // Ensure view type class is applied
+    container.className = 'data-list ' + expenseViewType + '-view';
+
     if (expenses.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
@@ -578,6 +625,11 @@ function deleteExpense(id) {
 // Render Received
 function renderReceived() {
     const container = document.getElementById('received-list');
+    if (!container) return;
+
+    // Ensure view type class is applied
+    container.className = 'data-list ' + receivedViewType + '-view';
+
     if (received.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
@@ -661,6 +713,11 @@ function filterExpenses() {
     });
 
     const container = document.getElementById('expenses-list');
+    if (!container) return;
+
+    // Maintain view type class
+    container.className = 'data-list ' + expenseViewType + '-view';
+
     if (filtered.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
@@ -727,6 +784,11 @@ function filterReceived() {
     });
 
     const container = document.getElementById('received-list');
+    if (!container) return;
+
+    // Maintain view type class
+    container.className = 'data-list ' + receivedViewType + '-view';
+
     if (filtered.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
